@@ -10,4 +10,7 @@ RUN chown laravel:laravel /var/www/html
 
 WORKDIR /var/www/html
 
-RUN docker-php-ext-install pdo pdo_mysql
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+COPY ./php/php.ini $PHP_INI_DIR/conf.d/
+
+RUN docker-php-ext-install pdo pdo_mysql pcntl posix
