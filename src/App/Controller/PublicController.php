@@ -1,13 +1,17 @@
 <?php
 
 namespace App\Controller;
+use LeadGenerator\Generator;
+use LeadGenerator\Lead;
 use League\Plates\Engine as Engine;
-//use BaoPham\TreeParser as TreeParser;
-use App\Controller\DB as DB;
+use Spatie\Async\Pool;
 
 class PublicController extends Controller
 {
     private $view = null;
+    private $leadArray;
+    private $counter;
+    private $pool;
     public function __construct()
     {
         $vendorDir = dirname(dirname(__FILE__));
@@ -16,15 +20,29 @@ class PublicController extends Controller
         $this->view =  Engine::create($baseDir . '/App/Views');
     }
     public function index() {
+        var_dump($this->parsDate());
         echo $this->view->render('index', ['name' => 'Руслан']);
     }
-    public function create() {
-        $this->DB->create();
-    }
+    /**
+     * @return Lead[]
+     */
     public function parsDate() {
-        $str = file_get_contents('http://vladlink/categories.json');
-        $json = json_decode($str);
-        $this->DB->insert($json);
+
+        $this->pool = Pool::create() ->concurrency(10000);
+
+        $generator = new Generator();
+        $generator->generateLeads(10000, function (Lead $lead) {
+            $this->pool[] = async(function () use ($lead) {
+                sleep(2);
+                return 3;
+            })->then(function (int $output) {
+                $this->leadArray[] = $output;
+            });
+        });
+        await($this->pool);
+        d($this->leadArray);
+        exit();
+        return 1;
     }
     public function printTxt() {
         $items = $this->DB->select();

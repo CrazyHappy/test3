@@ -6,9 +6,9 @@ function url($url) {
     return $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" . $url;
 }
 
-// Create Router instance
+// Создания роутинга
 $router = new \Bramus\Router\Router();
-// Define routes
+// Роуты по умоляанию
 $router->setNamespace('\App\Controller');
 
 require __DIR__ . '/../web.php';
