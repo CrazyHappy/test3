@@ -1,6 +1,20 @@
  # Тестовое задание
 Написать на PHP простую систему обработки клиентских заявок.
 
+Развернуть докер
+
+````
+docker-compose up -d --build site.
+````
+
+команды для работы с докером
+
+````
+docker-compose run --rm composer update
+docker-compose run --rm npm run dev
+docker-compose run --rm artisan migrate
+````
+
 Использовать уже готовый генератор заявок:
 ````
 https://github.com/vladimir163/lead-generator
