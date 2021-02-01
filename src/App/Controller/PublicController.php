@@ -20,12 +20,14 @@ class PublicController extends Controller
         $this->baseDir = $baseDir;
         $this->view =  Engine::create($baseDir . '/App/Views');
     }
-    public function index() {
+    public function index():void
+    {
         echo $this->view->render('index', [
             'name' => 'Руслана',
         ]);
     }
-    public function render() {
+    public function render():void
+    {
         $start = microtime(true);
         $this->parsDate();
         echo $this->view->render('render', [
@@ -33,13 +35,15 @@ class PublicController extends Controller
             'timer' => $time = microtime(true) - $start
         ]);
     }
-    public function readTxt() {
+    public function readTxt():void
+    {
         echo $this->view->render('read-txt');
     }
-    private function parsDate():int {
-        $this->pool = Pool::create() ->concurrency(10000);
+    private function parsDate():int
+    {
+        $this->pool = Pool::create() ->concurrency(300);
         $generator = new Generator();
-        $generator->generateLeads(50, function (Lead $lead) {
+        $generator->generateLeads(10000, function (Lead $lead) {
             $this->pool[] = async(function () use ($lead) {
                 sleep(2);
                 $renderFail = $lead;
@@ -53,7 +57,8 @@ class PublicController extends Controller
         $this->write($this->counter);
         return 1;
     }
-    private function write($text):void {
+    private function write($text):void
+    {
         $file = fopen( $this->baseDir . "/public/log.txt", "w" );
         if( $file == false ) {
             echo ( "Error in opening new file" );
@@ -62,7 +67,8 @@ class PublicController extends Controller
         fwrite( $file, $text );
         fclose( $file );
     }
-    private function setValue(Lead $lead) {
+    private function setValue(Lead $lead):string
+    {
         $mutable = Carbon::now();
         $string = '';
         $string .= isset($lead->id) ? $lead->id . ' | ' : '';
